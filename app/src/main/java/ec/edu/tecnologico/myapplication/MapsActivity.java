@@ -24,10 +24,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, View.OnClickListener {
 
     private GoogleMap mMap;
     Button botonlocalizacion;
+    Button loc;
+    Button car;
 
 
     @Override
@@ -51,28 +53,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
     @Override
+
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         enableMyLocation();
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Loja-Ecuador"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng miubica = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(miubica).title("Loja-Ecuador"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(miubica));
+        mMap.setOnMapLongClickListener(this);
 
-        Button loc = (Button) findViewById(R.id.botonLocation);
-        Button car = (Button) findViewById(R.id.botonCar);
+        loc = (Button) findViewById(R.id.botonLocation);
+        car =(Button) findViewById(R.id.botonCar);
 
-        loc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                miPosicion();
-            }
-        });
-
+        loc.setOnClickListener(this);
+        car.setOnClickListener(this) ;
 
     }
-
     private void miPosicion() {
         LocationManager objLocation = null;
         MiPosicion objListener;
@@ -94,7 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double lon = MiPosicion.longitud;
             Toast.makeText(
                     MapsActivity.this,
-                    "Latitude" + lat + "\n longitud" + lon,
+                    "Latitude" + lat + "\n Longitud" + lon,
                     Toast.LENGTH_SHORT).show();
 
             LatLng miubica = new LatLng(lat, lon);
@@ -130,6 +127,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        
+        Toast.makeText(
+                MapsActivity.this,
+                "Latitude" + latLng.latitude + "\n longitud" + latLng.longitude,
+                Toast.LENGTH_SHORT).show();
+        Marker mi_ubicacion = mMap.addMarker((new MarkerOptions().position(latLng))
+                .title("Mi ubicacion").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
     }
-}
+
+    @Override
+    public void onClick(View v) {
+        if (v ==loc ){
+            miPosicion();
+        }
+        else if(v == car){
+
+
+        }
+
+        }
+    }
+
